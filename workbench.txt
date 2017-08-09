@@ -1,0 +1,143 @@
+USE twitter
+
+SELECT * 
+FROM users
+WHERE first_name LIKE "%e";
+
+SELECT *
+FROM users
+WHERE first_name LIKE "%e"
+ORDER BY birthday DESC;
+
+
+INSERT INTO table_name (column_name1, column_name2) 
+VALUES('column1_value', 'column2_value');
+
+//make sure to add where!!
+UPDATE table_name SET column_name1 = 'some_value', column_name2='another_value' WHERE condition(s)
+
+//make sure to add where!!
+DELETE FROM table_name WHERE condition(s)
+
+
+
+
+Text Functions Data Types (VARCHAR, TEXT, CHAR etc.)
+
+Numeric Functions Data Types (INT, BIGINT, FLOAT etc.)
+
+Date and Time Functions Data Types (DATETIME)
+https://www.w3schools.com/sql/func_mysql_date_format.asp
+
+SELECT FUNCTION (column) FROM table_name
+
+
+1 to 1
+SELECT * FROM customers 
+JOIN addresses ON addresses.id = customers.address_id;
+
+1 to many
+SELECT * FROM orders 
+JOIN customers ON customers.id = orders.customer_id;
+
+Many to Many
+SELECT * FROM orders 
+JOIN items_orders ON orders.id = items_orders.order_id 
+JOIN items ON items.id = items_orders.item_id;
+
+GROUP BY
+use these:
+AVG(column)
+COUNT(column)
+GROUP_CONCAT(column)
+MAX(column)
+MIN(column)
+SUM(column)
+
+
+
+LEFT JOIN:
+
+all tweets from the user id of 1
+SELECT *
+FROM users
+LEFT JOIN tweets
+ON users.id = tweets.user_id
+WHERE users.id = 1;
+
+return all the tweets that the user with id 2 has tagged as favorites
+SELECT first_name, tweet
+FROM users
+LEFT JOIN faves
+ON users.id = faves.user_id
+LEFT JOIN tweets
+ON faves.tweet_id = tweets.id
+WHERE users.id = 2;
+
+
+all the tweets that user with id 2, or user with id 1, has tagged as favorites
+SELECT first_name, tweet
+FROM users
+LEFT JOIN faves
+ON users.id = faves.user_id
+LEFT JOIN tweets
+ON faves.tweet_id = tweets.id
+WHERE users.id = 1 OR users.id = 2;
+
+all the users that are following the user with id 1
+SELECT users.first_name as followed, users2.first_name as follower
+FROM users
+LEFT JOIN follows
+ON users.id = follows.followed_id
+LEFT JOIN users as users2
+ON users2.id = follows.follower_id
+WHERE users.id = 1;
+
+all users that are not following the user with id of 2
+SELECT *
+FROM users
+WHERE users.id NOT IN (
+SELECT follower_id
+FROM follows
+WHERE followed_id = 2
+) AND users.id != 2;
+
+SELECT users.first_name as user, COUNT(users2.first_name) as follower_count
+FROM users
+LEFT JOIN follows
+ON users.id = follows.followed_id
+LEFT JOIN users as users2
+ON users2.id = follows.follower_id
+WHERE users.id = 1
+GROUP BY users.id
+
+
+
+
+
+
+
+others on nesting:
+
+SELECT name FROM world
+  WHERE population >
+     (SELECT population FROM world
+      WHERE name='Russia')
+
+
+SELECT name from world
+     WHERE gdp/population >
+         (SELECT gdp/population FROM world
+            WHERE name = 'United Kingdom')
+     AND continent = 'Europe'
+
+
+select name, continent from world
+WHERE continent =
+(select continent FROM world
+WHERE name ='Argentina')
+OR continent = 
+(select continent FROM world 
+WHERE name = 'Australia')
+order by name
+
